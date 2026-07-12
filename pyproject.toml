@@ -1,0 +1,79 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nwep"
+version = "0.1.0"
+description = "Idiomatic Python bindings for the WEB/1 protocol over QUIC (libnwep)"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "levresearch", email = "edlevesquepelletier@gmail.com" }]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Intended Audience :: Developers",
+    "Topic :: Internet",
+    "Topic :: Software Development :: Libraries",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows",
+]
+dependencies = ["cffi>=1.16"]
+
+[project.urls]
+Repository = "https://github.com/levresearch/nwep-py"
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[tool.setuptools.packages.find]
+include = ["nwep*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.mypy]
+# cffi's lib and ffi objects are dynamically typed; suppress false positives from
+# the raw ffi bridge layer (_sys.py) and the thin wrappers that call into it.
+[[tool.mypy.overrides]]
+module = [
+    "nwep",
+    "nwep._sys",
+    "nwep.errors",
+    "nwep.wire",
+    "nwep.message",
+    "nwep.address",
+    "nwep.identity",
+    "nwep.cache",
+    "nwep.server",
+    "nwep.client",
+    "nwep.dht",
+    "nwep.log",
+    "nwep.shamir",
+    "nwep.uri",
+    "nwep.trust",
+    "nwep.trust.bls",
+    "nwep.trust.checkpoint",
+    "nwep.trust.anchor",
+    "nwep.trust.store",
+]
+disable_error_code = ["attr-defined", "union-attr", "return-value", "assignment"]
+
+[tool.pyright]
+pythonVersion = "3.10"
+# cffi's ffi and lib objects are dynamically typed — pyright cannot resolve
+# attributes on _CDataBase or calls on the generated lib interface. silence
+# the false positives that would otherwise flood the editor for every file
+# that touches the raw ffi layer.
+reportAttributeAccessIssue = "none"
+reportOperatorIssue = "none"
+reportReturnType = "none"
+reportArgumentType = "none"
+reportIndexIssue = "none"
+reportCallIssue = "none"
+reportUnknownMemberType = "none"
+reportUnknownVariableType = "none"
+reportUnknownArgumentType = "none"
