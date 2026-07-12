@@ -621,14 +621,9 @@ def _load_library() -> "cffi.api.FFI.CData":
                 return ffi.dlopen(str(path))
 
     install_hint = ""
-    if sys.platform.startswith("linux"):
-        install_hint = " Install nwep with the GUI installer (installs to ~/.local/lib or /usr/local/lib)."
-    elif sys.platform == "win32":
-        install_hint = " Install nwep with the GUI installer (installs to %LOCALAPPDATA%\\Programs\\nwep)."
     raise OSError(
-        f"could not find {' or '.join(names)}. build it from the repo root with "
-        "`zig build` (cross: `zig build -Dtarget=<triple>`), or set NWEP_LIB_DIR "
-        f"to the directory holding it.{install_hint} searched: " + ", ".join(tried)
+        "nwep requires libnwep to be installed. "
+        "download and run the installer from https://pkg.rebuildtheinter.net"
     )
 
 
