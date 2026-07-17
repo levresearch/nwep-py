@@ -594,7 +594,6 @@ def _load_library() -> "cffi.api.FFI.CData":
         "nwep_core",
     )
     names = _lib_names(prefer_core)
-    tried: list[str] = []
 
     # try bare names first - on a system install ldconfig (Linux) or PATH (Windows)
     # makes this work with no path at all.
@@ -603,27 +602,26 @@ def _load_library() -> "cffi.api.FFI.CData":
             try:
                 return ffi.dlopen(name)
             except OSError:
-                tried.append(f"{name} (bare name)")
+                pass
 
     # Linux user install: ask pkg-config where the library landed.
     if pc_dir := _pkgconfig_libdir():
         for name in names:
             path = pc_dir / name
-            tried.append(str(path))
             if path.exists():
                 return ffi.dlopen(str(path))
 
     for directory in _candidate_dirs():
         for name in names:
             path = directory / name
-            tried.append(str(path))
             if path.exists():
                 return ffi.dlopen(str(path))
 
-    install_hint = ""
     raise OSError(
         "nwep requires libnwep to be installed. "
-        "download and run the installer from https://pkg.rebuildtheinter.net"
+        "download and run the installer from http://pkg.rebuildtheinter.net/tools/latest/ "
+        "(if it is already installed somewhere unusual, set NWEP_LIB_DIR to the "
+        "directory holding it)"
     )
 
 
